@@ -1,0 +1,617 @@
+```html
+<!DOCTYPE html>
+<html lang="hi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Zone - गणित का महाभंडार</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tone.js for Sound Effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <!-- MathJax for rendering math formulas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Hind', 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-brand-500/30">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold bg-gradient-to-r from-brand-600 to-indigo-500 bg-clip-text text-transparent">Math Zone</span>
+                        <span class="text-xs block text-slate-500 dark:text-slate-400">गणित का महाभंडार</span>
+                    </div>
+                </div>
+
+                <!-- Nav Controls -->
+                <div class="flex items-center space-x-3">
+                    <!-- Audio Toggle -->
+                    <button id="soundToggle" onclick="toggleSound()" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition" title="ध्वनि ऑन/ऑफ">
+                        <i class="fa-solid fa-volume-high text-lg"></i>
+                    </button>
+                    <!-- Dark Mode Toggle -->
+                    <button id="themeToggle" onclick="toggleTheme()" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition" title="थीम बदलें">
+                        <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+                        <i class="fa-solid fa-sun text-lg hidden dark:block text-amber-400"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <nav class="flex space-x-2 overflow-x-auto custom-scrollbar pb-2 pt-1 border-t border-slate-100 dark:border-slate-700/50">
+                <button onclick="switchTab('quizzes')" class="tab-btn px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 whitespace-nowrap bg-brand-600 text-white shadow-sm" data-tab="quizzes">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>क्विज़ व अभ्यास (Class 1-10)</span>
+                </button>
+                <button onclick="switchTab('calculators')" class="tab-btn px-4 py-2 rounded-lg font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-2 whitespace-nowrap" data-tab="calculators">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>कैलकुलेटर सूट</span>
+                </button>
+                <button onclick="switchTab('games')" class="tab-btn px-4 py-2 rounded-lg font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-2 whitespace-nowrap" data-tab="games">
+                    <i class="fa-solid fa-gamepad"></i>
+                    <span>मैथ गेम्स (Math Games)</span>
+                </button>
+                <button onclick="switchTab('formulas')" class="tab-btn px-4 py-2 rounded-lg font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-2 whitespace-nowrap" data-tab="formulas">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <span>फार्मूला व नोट्स</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: QUIZZES & PRACTICE -->
+        <section id="tab-quizzes" class="tab-content">
+            <div class="mb-6 bg-gradient-to-r from-brand-600 to-indigo-600 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <h1 class="text-2xl sm:text-3xl font-bold mb-2">अपनी कक्षा चुनें और अभ्यास शुरू करें!</h1>
+                    <p class="text-brand-100 text-sm sm:text-base">कक्षा 1 से 10 तक के गणितीय प्रश्नों का विस्तृत अभ्यास, तुरंत उत्तर और उत्तर समाधान के साथ।</p>
+                </div>
+                <i class="fa-solid fa-square-root-variable text-8xl absolute -right-4 -bottom-4 text-white/10"></i>
+            </div>
+
+            <!-- Class Selector Grid -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-xl font-bold mb-4 text-slate-800 dark:text-white flex items-center gap-2">
+                <i class="fas fa-[#6366f1] fa-layer-group text-indigo-500"></i> अपनी कक्षा चुनें (Select Your Class)
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 sm:gap-4" id="class-grid">
+                <!-- JavaScript handles click events dynamically -->
+            </div>
+        </section>
+
+        <!-- Main Content & Chapters -->
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-500 block">स्कोर</span>
+                        <span id="quizScore" class="text-xl font-bold text-brand-600 dark:text-brand-400">0 / 0</span>
+                    </div>
+                </div>
+
+                <!-- Question Box -->
+                <div id="questionBox" class="space-y-6">
+                    <div class="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100" id="questionText">
+                        प्रश्न लोड हो रहा है...
+                    </div>
+
+                    <!-- Options Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="optionsGrid">
+                        <!-- Options filled via JS -->
+                    </div>
+
+                    <!-- Solution / Feedback Area -->
+                    <div id="feedbackArea" class="hidden p-4 rounded-xl border">
+                        <div class="font-bold mb-1 flex items-center space-x-2" id="feedbackTitle"></div>
+                        <div class="text-sm text-slate-600 dark:text-slate-300" id="feedbackSolution"></div>
+                    </div>
+
+                    <!-- Next Question Button -->
+                    <div class="flex justify-end pt-2">
+                        <button id="nextBtn" onclick="nextQuestion()" class="hidden px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-xl shadow-md transition flex items-center space-x-2">
+                            <span>अगला प्रश्न</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: CALCULATORS -->
+        <section id="tab-calculators" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Calculator Sub-nav -->
+                <div class="lg:col-span-3 space-y-2">
+                    <button onclick="switchCalc('standard')" class="calc-nav w-full text-left px-4 py-3 rounded-xl font-medium border border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center space-x-3" data-calc="standard">
+                        <i class="fa-solid fa-calculator text-lg"></i>
+                        <span>साधारण/वैज्ञानिक (Scientific)</span>
+                    </button>
+                    <button onclick="switchCalc('fraction')" class="calc-nav w-full text-left px-4 py-3 rounded-xl font-medium border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center space-x-3" data-calc="fraction">
+                        <i class="fa-solid fa-divide text-lg"></i>
+                        <span>भिन्न (Fraction Calculator)</span>
+                    </button>
+                    <button onclick="switchCalc('converter')" class="calc-nav w-full text-left px-4 py-3 rounded-xl font-medium border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center space-x-3" data-calc="converter">
+                        <i class="fa-solid fa-ruler-combined text-lg"></i>
+                        <span>इकाई परिवर्तक (Unit Converter)</span>
+                    </button>
+                </div>
+
+                <!-- Calculator Display Panels -->
+                <div class="lg:col-span-9 bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-md">
+                    
+                    <!-- 1. Standard / Scientific Calculator -->
+                    <div id="calc-standard" class="calc-panel max-w-md mx-auto">
+                        <div class="bg-slate-900 text-right p-4 rounded-xl mb-4 font-mono">
+                            <div id="calcHistory" class="text-xs text-slate-400 h-5 overflow-hidden"></div>
+                            <div id="calcDisplay" class="text-3xl text-white font-bold tracking-wider truncate">0</div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="calcInput('C')" class="p-3 rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold hover:bg-rose-500/30">C</button>
+                            <button onclick="calcInput('(')" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-700 font-bold">(</button>
+                            <button onclick="calcInput(')')" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-700 font-bold">)</button>
+                            <button onclick="calcInput('/')" class="p-3 rounded-xl bg-brand-500 text-white font-bold">÷</button>
+
+                            <button onclick="calcInput('sin(')" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-bold">sin</button>
+                            <button onclick="calcInput('cos(')" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-bold">cos</button>
+                            <button onclick="calcInput('tan(')" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-bold">tan</button>
+                            <button onclick="calcInput('*')" class="p-3 rounded-xl bg-brand-500 text-white font-bold">×</button>
+
+                            <button onclick="calcInput('7')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">7</button>
+                            <button onclick="calcInput('8')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">8</button>
+                            <button onclick="calcInput('9')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">9</button>
+                            <button onclick="calcInput('-')" class="p-3 rounded-xl bg-brand-500 text-white font-bold">-</button>
+
+                            <button onclick="calcInput('4')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">4</button>
+                            <button onclick="calcInput('5')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">5</button>
+                            <button onclick="calcInput('6')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">6</button>
+                            <button onclick="calcInput('+')" class="p-3 rounded-xl bg-brand-500 text-white font-bold">+</button>
+
+                            <button onclick="calcInput('1')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">1</button>
+                            <button onclick="calcInput('2')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">2</button>
+                            <button onclick="calcInput('3')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">3</button>
+                            <button onclick="calcInput('^')" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-700 font-bold">x^y</button>
+
+                            <button onclick="calcInput('0')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">0</button>
+                            <button onclick="calcInput('.')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 font-bold">.</button>
+                            <button onclick="calcInput('sqrt(')" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-700 font-bold">√</button>
+                            <button onclick="calcEqual()" class="p-3 rounded-xl bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-600/30">=</button>
+                        </div>
+                    </div>
+
+                    <!-- 2. Fraction Calculator -->
+                    <div id="calc-fraction" class="calc-panel hidden max-w-md mx-auto">
+                        <h3 class="text-lg font-bold mb-4">भिन्न कैलकुलेटर (Fraction Calculator)</h3>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <!-- Fraction 1 -->
+                            <div class="flex flex-col space-y-2 w-20">
+                                <input type="number" id="num1" placeholder="अंश" class="p-2 border rounded-lg text-center dark:bg-slate-700 dark:border-slate-600">
+                                <div class="h-0.5 bg-slate-400"></div>
+                                <input type="number" id="den1" placeholder="हर" class="p-2 border rounded-lg text-center dark:bg-slate-700 dark:border-slate-600">
+                            </div>
+
+                            <!-- Operator -->
+                            <select id="fracOp" class="p-2 border rounded-lg font-bold dark:bg-slate-700 dark:border-slate-600">
+                                <option value="+">+</option>
+                                <option value="-">-</option>
+                                <option value="*">×</option>
+                                <option value="/">÷</option>
+                            </select>
+
+                            <!-- Fraction 2 -->
+                            <div class="flex flex-col space-y-2 w-20">
+                                <input type="number" id="num2" placeholder="अंश" class="p-2 border rounded-lg text-center dark:bg-slate-700 dark:border-slate-600">
+                                <div class="h-0.5 bg-slate-400"></div>
+                                <input type="number" id="den2" placeholder="हर" class="p-2 border rounded-lg text-center dark:bg-slate-700 dark:border-slate-600">
+                            </div>
+
+                            <button onclick="solveFraction()" class="px-4 py-2 bg-brand-600 text-white rounded-xl font-bold">=</button>
+                        </div>
+
+                        <!-- Result -->
+                        <div id="fracResult" class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl text-center text-lg font-bold">
+                            उत्तर यहाँ दिखेगा
+                        </div>
+                    </div>
+
+                    <!-- 3. Unit Converter -->
+                    <div id="calc-converter" class="calc-panel hidden max-w-md mx-auto space-y-4">
+                        <h3 class="text-lg font-bold">इकाई परिवर्तक (Unit Converter)</h3>
+                        <div>
+                            <label class="block text-sm text-slate-500 mb-1">माप का प्रकार</label>
+                            <select id="unitType" onchange="updateUnitOptions()" class="w-full p-2.5 border rounded-xl dark:bg-slate-700 dark:border-slate-600">
+                                <option value="length">लंबाई (Length)</option>
+                                <option value="weight">वजन (Weight)</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm text-slate-500 mb-1">से (From)</label>
+                                <input type="number" id="unitVal1" value="1" oninput="convertUnit()" class="w-full p-2.5 border rounded-xl mb-2 dark:bg-slate-700 dark:border-slate-600">
+                                <select id="unitSelect1" onchange="convertUnit()" class="w-full p-2 border rounded-xl dark:bg-slate-700 dark:border-slate-600"></select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-slate-500 mb-1">में (To)</label>
+                                <input type="number" id="unitVal2" readonly class="w-full p-2.5 border rounded-xl mb-2 bg-slate-100 dark:bg-slate-900 dark:border-slate-600 font-bold">
+                                <select id="unitSelect2" onchange="convertUnit()" class="w-full p-2 border rounded-xl dark:bg-slate-700 dark:border-slate-600"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: MATH GAMES -->
+        <section id="tab-games" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Game 1: Speed Math -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="p-3 bg-amber-500/10 text-amber-500 rounded-xl text-xl font-bold"><i class="fa-solid fa-bolt"></i></span>
+                            <span id="speedTimer" class="font-mono font-bold text-lg bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full">60s</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">स्पीड मैथ चुनौती (Speed Math Challenge)</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">60 सेकंड में अधिक से अधिक गणितीय प्रश्नों का सही उत्तर दें!</p>
+                        
+                        <!-- Game Area -->
+                        <div id="speedGameBox" class="hidden text-center py-6 bg-slate-50 dark:bg-slate-700/40 rounded-xl">
+                            <div id="speedEq" class="text-3xl font-bold mb-4 text-brand-600 dark:text-brand-400">12 + 5 = ?</div>
+                            <div class="grid grid-cols-2 gap-3 max-w-xs mx-auto" id="speedOpts"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button id="startSpeedBtn" onclick="startSpeedGame()" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-lg transition">
+                            गेम शुरू करें!
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game 2: Equation Solver Mini-Game -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="p-3 bg-emerald-500/10 text-emerald-500 rounded-xl text-xl font-bold"><i class="fa-solid fa-puzzle-piece"></i></span>
+                            <span id="eqScore" class="font-bold text-sm bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full">Score: 0</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">समीकरण पहेली (Find Missing Number)</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">समीकरण को संतुलित करने के लिए '?' का सही मान चुनें।</p>
+                        
+                        <div id="eqGameBox" class="text-center py-6 bg-slate-50 dark:bg-slate-700/40 rounded-xl">
+                            <div id="eqQuestion" class="text-2xl font-bold mb-4">? + 8 = 15</div>
+                            <div class="grid grid-cols-3 gap-2 max-w-xs mx-auto" id="eqOpts">
+                                <!-- Options filled by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button onclick="nextEqGame()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg transition">
+                            अगला प्रश्न
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: FORMULAS & STUDY MATERIAL -->
+        <section id="tab-formulas" class="tab-content hidden space-y-6">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-md">
+                <h2 class="text-xl font-bold mb-4 flex items-center space-x-2">
+                    <i class="fa-solid fa-book text-brand-600"></i>
+                    <span>गणित के महत्वपूर्ण सूत्र (Formula Cheat Sheet)</span>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Algebra -->
+                    <div class="border dark:border-slate-700 rounded-xl p-4 bg-slate-50 dark:bg-slate-700/30">
+                        <h3 class="font-bold text-brand-600 dark:text-brand-400 mb-2 border-b pb-1">बीजगणित (Algebra)</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li>• \( (a + b)^2 = a^2 + 2ab + b^2 \)</li>
+                            <li>• \( (a - b)^2 = a^2 - 2ab + b^2 \)</li>
+                            <li>• \( a^2 - b^2 = (a - b)(a + b) \)</li>
+                            <li>• \( (a + b)^3 = a^3 + b^3 + 3ab(a + b) \)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Geometry -->
+                    <div class="border dark:border-slate-700 rounded-xl p-4 bg-slate-50 dark:bg-slate-700/30">
+                        <h3 class="font-bold text-emerald-600 dark:text-emerald-400 mb-2 border-b pb-1">क्षेत्रमिति व रेखागणित (Geometry)</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li>• वृत्त का क्षेत्रफल = \( \pi r^2 \)</li>
+                            <li>• वृत्त की परिधि = \( 2 \pi r \)</li>
+                            <li>• आयत का क्षेत्रफल = लम्बाई × चौड़ाई</li>
+                            <li>• त्रिभुज का क्षेत्रफल = \( \frac{1}{2} \times \text{आधार} \times \text{ऊंचाई} \)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Trigonometry -->
+                    <div class="border dark:border-slate-700 rounded-xl p-4 bg-slate-50 dark:bg-slate-700/30">
+                        <h3 class="font-bold text-purple-600 dark:text-purple-400 mb-2 border-b pb-1">त्रिकोणमिति (Trigonometry)</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li>• \( \sin^2\theta + \cos^2\theta = 1 \)</li>
+                            <li>• \( \tan\theta = \frac{\sin\theta}{\cos\theta} \)</li>
+                            <li>• \( 1 + \tan^2\theta = \sec^2\theta \)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Arithmetic -->
+                    <div class="border dark:border-slate-700 rounded-xl p-4 bg-slate-50 dark:bg-slate-700/30">
+                        <h3 class="font-bold text-amber-600 dark:text-amber-400 mb-2 border-b pb-1">अंकगणित (Arithmetic)</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li>• साधारण ब्याज = \( \frac{P \times R \times T}{100} \)</li>
+                            <li>• लाभ % = \( \frac{\text{लाभ}}{\text{क्रय मूल्य}} \times 100 \)</li>
+                            <li>• औसत = (सभी प्रेक्षणों का योग) / (कुल संख्या)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // State Management
+        let currentClass = 10;
+        let searchQuery = '';
+        let selectedCategory = 'all';
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            renderClasses();
+            renderChapters();
+            setupEventListeners();
+        });
+
+        // Render Class Buttons
+        function renderClasses() {
+            const grid = document.getElementById('class-grid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            for (let i = 6; i <= 12; i++) {
+                const btn = document.createElement('button');
+                const isActive = currentClass === i;
+                btn.className = `p-4 rounded-xl font-semibold transition-all duration-200 text-center border cursor-pointer ${
+                    isActive 
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 border-indigo-600 scale-105' 
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-indigo-400 hover:shadow'
+                }`;
+                btn.innerHTML = `<div class="text-xs opacity-75">Class</div><div class="text-xl font-bold">${i}th</div>`;
+                btn.onclick = () => selectClass(i);
+                grid.appendChild(btn);
+            }
+        }
+
+        function selectClass(classNum) {
+            currentClass = classNum;
+            renderClasses();
+            renderChapters();
+        }
+
+        // Setup Event Listeners for Search & Filters
+        function setupEventListeners() {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    searchQuery = e.target.value.toLowerCase();
+                    renderChapters();
+                });
+            }
+        }
+
+        function startQuiz(cls) {
+            playSound('click');
+            currentClass = cls;
+            currentQIndex = 0;
+            score = 0;
+            document.getElementById('quizContainer').classList.remove('hidden');
+            document.getElementById('quizClassBadge').innerText = `कक्षा ${cls}`;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questions = quizData[currentClass] || quizData[5];
+            const q = questions[currentQIndex % questions.length];
+            
+            document.getElementById('questionText').innerText = `Q${currentQIndex + 1}. ${q.q}`;
+            document.getElementById('quizScore').innerText = `${score} / ${currentQIndex}`;
+            document.getElementById('feedbackArea').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+
+            const optsGrid = document.getElementById('optionsGrid');
+            optsGrid.innerHTML = '';
+            q.opts.forEach((opt, idx) => {
+                optsGrid.innerHTML += `
+                    <button onclick="checkAnswer(${idx})" class="opt-btn p-3 text-left border rounded-xl hover:bg-brand-50 dark:hover:bg-slate-700 dark:border-slate-600 font-medium transition">
+                        ${opt}
+                    </button>
+                `;
+            });
+        }
+
+        function checkAnswer(selectedIdx) {
+            const questions = quizData[currentClass] || quizData[5];
+            const q = questions[currentQIndex % questions.length];
+            const btns = document.querySelectorAll('.opt-btn');
+            
+            btns.forEach(btn => btn.disabled = true);
+
+            const feedbackArea = document.getElementById('feedbackArea');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackSolution = document.getElementById('feedbackSolution');
+
+            feedbackArea.classList.remove('hidden');
+
+            if (selectedIdx === q.ans) {
+                playSound('correct');
+                score++;
+                btns[selectedIdx].classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+                feedbackArea.className = "p-4 rounded-xl border bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700";
+                feedbackTitle.className = "font-bold text-emerald-600 dark:text-emerald-400";
+                feedbackTitle.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>सही उत्तर!</span>';
+            } else {
+                playSound('wrong');
+                btns[selectedIdx].classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+                btns[q.ans].classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+                feedbackArea.className = "p-4 rounded-xl border bg-rose-50 dark:bg-rose-900/20 border-rose-300 dark:border-rose-700";
+                feedbackTitle.className = "font-bold text-rose-600 dark:text-rose-400";
+                feedbackTitle.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <span>गलत उत्तर!</span>';
+            }
+
+            feedbackSolution.innerText = q.sol;
+            document.getElementById('quizScore').innerText = `${score} / ${currentQIndex + 1}`;
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            currentQIndex++;
+            loadQuestion();
+        }
+
+        // --- Calculator Logic ---
+        function switchCalc(calcType) {
+            playSound('click');
+            document.querySelectorAll('.calc-panel').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`calc-${calcType}`).classList.remove('hidden');
+        }
+
+        let calcExpr = "";
+        function calcInput(val) {
+            playSound('click');
+            if (val === 'C') {
+                calcExpr = "";
+            } else {
+                calcExpr += val;
+            }
+            document.getElementById('calcDisplay').innerText = calcExpr || "0";
+        }
+
+        function calcEqual() {
+            try {
+                let formattedExpr = calcExpr
+                    .replace(/sin\(/g, "Math.sin(")
+                    .replace(/cos\(/g, "Math.cos(")
+                    .replace(/tan\(/g, "Math.tan(")
+                    .replace(/sqrt\(/g, "Math.sqrt(")
+                    .replace(/\^/g, "**");
+                
+                let res = eval(formattedExpr);
+                document.getElementById('calcHistory').innerText = calcExpr;
+                document.getElementById('calcDisplay').innerText = res;
+                calcExpr = res.toString();
+                playSound('correct');
+            } catch(e) {
+                document.getElementById('calcDisplay').innerText = "Error";
+                playSound('wrong');
+                calcExpr = "";
+            }
+        }
+
+        function solveFraction() {
+            const n1 = parseInt(document.getElementById('num1').value) || 0;
+            const d1 = parseInt(document.getElementById('den1').value) || 1;
+            const n2 = parseInt(document.getElementById('num2').value) || 0;
+            const d2 = parseInt(document.getElementById('den2').value) || 1;
+            const op = document.getElementById('fracOp').value;
+
+            let numRes = 0, denRes = d1 * d2;
+            if (op === '+') numRes = n1 * d2 + n2 * d1;
+            if (op === '-') numRes = n1 * d2 - n2 * d1;
+            if (op === '*') { numRes = n1 * n2; denRes = d1 * d2; }
+            if (op === '/') { numRes = n1 * d2; denRes = d1 * n2; }
+
+            document.getElementById('fracResult').innerText = `उत्तर: ${numRes} / ${denRes}`;
+            playSound('correct');
+        }
+
+        // --- Games Logic ---
+        function nextEqGame() {
+            const a = Math.floor(Math.random() * 20) + 1;
+            const b = Math.floor(Math.random() * 20) + 1;
+            const ans = a + b;
+            
+            document.getElementById('eqQuestion').innerText = `${a} + ? = ${ans}`;
+            const optsGrid = document.getElementById('eqOpts');
+            optsGrid.innerHTML = '';
+            
+            const options = [b, b + 2, Math.max(1, b - 3)].sort(() => Math.random() - 0.5);
+            options.forEach(opt => {
+                optsGrid.innerHTML += `
+                    <button onclick="checkEqAns(${opt === b})" class="p-3 bg-white dark:bg-slate-700 border font-bold rounded-xl hover:bg-brand-50">
+                        ${opt}
+                    </button>
+                `;
+            });
+        }
+
+        function checkEqAns(isCorrect) {
+            if (isCorrect) {
+                playSound('correct');
+                alert("सही जवाब! 🎉");
+                nextEqGame();
+            } else {
+                playSound('wrong');
+                alert("गलत जवाब, फिर कोशिश करें!");
+            }
+        }
+
+        // Init App
+        window.onload = function() {
+            initClasses();
+            nextEqGame();
+        };
+    </script>
+</body>
+</html>
+```
